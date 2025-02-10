@@ -1,1 +1,1 @@
-# helm-present
+# Introduction to Helm - Instructor Guide
