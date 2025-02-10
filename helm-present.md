@@ -33,7 +33,24 @@ If there is any work which is not directly related to Kubernetes, but it has to 
 Charts are stored in a chart repository.
 ![image](https://github.com/user-attachments/assets/b054c033-37c6-4fc9-aff4-6fe711e552a5)
                                   https://bitnami.com/stacks/helm
+                                  
+![image](https://github.com/user-attachments/assets/9622ebb7-b5b2-49e3-9a16-e91209154074)
+
+You can look at the source of the charts here: https://github.com/bitnami/charts
+![image](https://github.com/user-attachments/assets/d45627f1-3a31-423d-986e-2a8869fcc390)
+
+Each chart will have a templates folder, a Chart.yaml file and the values.yaml
+![image](https://github.com/user-attachments/assets/609fa330-fdf0-4bae-be49-2eb8db60d096)
+
+## 3. Work with chart repositories
+helm repo list
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo remove bitnami
+![image](https://github.com/user-attachments/assets/40cddfea-e79a-4849-b002-b5cb44112983)
 
 
+- Search the repository:
+helm search repo mysql
+helm search repo apache
 
 
