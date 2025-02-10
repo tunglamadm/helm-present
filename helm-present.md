@@ -91,6 +91,7 @@ The installation name should be unique per namespace.
 
   helm uninstall mydb
 ![image](https://github.com/user-attachments/assets/a74d6a7d-d954-4ffe-94fd-75d6502b2c86)
+![image](https://github.com/user-attachments/assets/b254a483-fa75-485c-914a-6c95806403d8)
 
 
 
