@@ -44,13 +44,56 @@ Each chart will have a templates folder, a Chart.yaml file and the values.yaml
 
 ## 3. Work with chart repositories
 helm repo list
+
 helm repo add bitnami https://charts.bitnami.com/bitnami
+
 helm repo remove bitnami
 ![image](https://github.com/user-attachments/assets/40cddfea-e79a-4849-b002-b5cb44112983)
 
 
 - Search the repository:
+
 helm search repo mysql
-helm search repo apache
+
+helm search repo apache (show only latest version)
+
+![image](https://github.com/user-attachments/assets/e7d4b2e9-f7b5-467e-af19-1449003db107)
+
+helm search repo apache --versions (show older versions)
+
+![image](https://github.com/user-attachments/assets/571ea5dd-6407-429a-aee5-50aa44080fda)
+
+### 3.1. Install Helm chart
+- Install Helm chart
+helm install mydb bitnami/mysql
+![image](https://github.com/user-attachments/assets/90581501-c8a4-4b7a-a422-6dcdd37f9fe9)
+Successfully deployed helm chart, it will show the result and also the related instructions about the chart installed
+![image](https://github.com/user-attachments/assets/30af28ff-cf1c-41f7-b7a7-90dfdfc7da2e)
+
+Check the pod:
+
+![image](https://github.com/user-attachments/assets/c4ebe947-a603-4bb6-83c4-2e59d6bbf16e)
+![image](https://github.com/user-attachments/assets/63746bc8-2745-46a0-b029-b248218f163f)
+
+
+- Install to another namespace:
+
+helm install myapache bitnami/apache -n myapache-test-2
+![image](https://github.com/user-attachments/assets/2237de4d-cd4f-46fa-86ac-488647a2f68f)
+
+The installation name should be unique per namespace.
+
+
+- List and Uninstall:
+
+  helm list
+![image](https://github.com/user-attachments/assets/b4482fe7-ada3-455a-865e-49d7bebb47c7)
+
+  helm uninstall mydb
+![image](https://github.com/user-attachments/assets/a74d6a7d-d954-4ffe-94fd-75d6502b2c86)
+
+
+
+
 
 
