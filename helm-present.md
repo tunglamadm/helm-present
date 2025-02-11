@@ -251,6 +251,7 @@ Example: helm upgrade --install mywebserver bitnamy/apache
 The way this command works, it will first check if the installation is already there. If it is there it will do the upgrade, otherwise it will do a installation.
 
 ![image](https://github.com/user-attachments/assets/20f545fe-72be-4773-bff6-887e2b8ad081)
+![image](https://github.com/user-attachments/assets/4de0fb08-4c50-4664-9d8b-a7f2ed32d51e)
 
 
 
