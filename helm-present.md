@@ -113,7 +113,31 @@ The installation name should be unique per namespace.
   ![image](https://github.com/user-attachments/assets/e2b73b93-c805-4a4f-8c45-077b3f02f4c3)
 
   
+### 3.3. Helm Upgrade
 
+- Update repo:
+
+![image](https://github.com/user-attachments/assets/b1f588c7-9c43-47ee-817e-8fe498ce7a77)
+
+
+- Upgrading chart: helm upgrade mydb bitnami/mysql --values values.yaml
+![image](https://github.com/user-attachments/assets/da2fa1a6-71ef-4944-8318-fccd41a641cd)
+
+What will be upgraded are new chart version due to repo update above and what you want to change in values.yaml.
+Helm will generate the Kubernetes templates. It will compare them to the old templates that are already deployed, and only the changes that are required will be pushed to the Kubernetes cluster.
+
+- Check revision:
+
+![image](https://github.com/user-attachments/assets/a6a1233b-26da-4476-9f04-273310a59e6e)
+
+- Helm upgrade note: if you simply do upgrade without any configuration, then it will use the default configuration, it won't use the configuration that was used during the first installation.
+  
+ + Default config will be use: helm upgrade mydb bitnami/mysql
+   
+ + Pass the same configuration or updated configuration: helm upgrade mydb bitnami/mysql --values values.yaml
+   
+ + Reuse previous configuration: helm upgrade mydb bitnami/mysql --reuse-values
+ 
 
 
 
