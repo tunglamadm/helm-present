@@ -238,9 +238,19 @@ helm rollback myapache 1
 Even if we uninstall helm chart but we still keep helm history, we can still rollback to previous versions. (helm uninstall mydb --keep-history)
 
 
+### 4.8. create namespace
 
+Helm has option or flag called --create-namespace. This will automatically create new namespace, we don't have to crate new namespace then apply to helm command.
 
+- Example: helm install myapache bitnami/apache --namespace myapache --create-namespace
 
+### 4.9. helm install or upgrade
+
+Example: helm upgrade --install mywebserver bitnamy/apache
+
+The way this command works, it will first check if the installation is already there. If it is there it will do the upgrade, otherwise it will do a installation.
+
+![image](https://github.com/user-attachments/assets/20f545fe-72be-4773-bff6-887e2b8ad081)
 
 
 
