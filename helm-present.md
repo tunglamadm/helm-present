@@ -94,6 +94,7 @@ The installation name should be unique per namespace.
 ![image](https://github.com/user-attachments/assets/b254a483-fa75-485c-914a-6c95806403d8)
 
 
+### 3.2. Custom Values
 
 
 
