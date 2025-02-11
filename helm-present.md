@@ -132,12 +132,115 @@ Helm will generate the Kubernetes templates. It will compare them to the old tem
 
 - Helm upgrade note: if you simply do upgrade without any configuration, then it will use the default configuration, it won't use the configuration that was used during the first installation.
   
- + Default config will be use: helm upgrade mydb bitnami/mysql
+   +) Default config will be use: helm upgrade mydb bitnami/mysql
    
- + Pass the same configuration or updated configuration: helm upgrade mydb bitnami/mysql --values values.yaml
+   +) Pass the same configuration or updated configuration: helm upgrade mydb bitnami/mysql --values values.yaml
    
- + Reuse previous configuration: helm upgrade mydb bitnami/mysql --reuse-values
+   +) Reuse previous configuration: helm upgrade mydb bitnami/mysql --reuse-values
  
+
+### 3.4. Release Records
+
+kubectl get secret
+
+![image](https://github.com/user-attachments/assets/d300d0e6-58b6-4c6c-84ec-b345f37bdc6a)
+Everytime we do installation or upgrade, it will create a secret, this is release record. This secret record will have the entire information about installation.
+
+When you uninstall a chart, if you want to retain the secret records for rollback,... you can use --keep-history: helm uninstall mydb --keep-history
+
+![image](https://github.com/user-attachments/assets/f071f326-52bd-4526-a712-45ae229666e1)
+
+
+## 4. Advanced commands
+
+### 4.1. helm release workflow
+
+helm install mydb bitnami/mysql (https://github.com/bitnami/charts/tree/main/bitnami/mysql)
+
+- Load the chart and its dependecies: the entire chart will be loaded and also its dependecies if needed.
+  
+- Parse the values.yaml.
+  
+- Generate the yaml: take the values provided, override the default values, generate the template yaml using those values by substituting values in the template.
+  
+- Parse the YAML to kube objects and validate: it will parse those yamls into Kubernetes objects, validate those objects against Kubernetes schema to ensure that they can be created and they are complying with the kubernetes schema.
+  
+- Generate YAML and send to kube cluster.
+
+### 4.2. helm --dry-run
+
+helm install mydb bitnami/mysql --values values.yaml --dry-run
+
+This option will load this chart, substitute the values through values.yaml. Render the required kubernetes templates yaml file. But it will not creat resource in K8s cluster. Useful for debugging and seeing what we configured in the chart.
+
+![image](https://github.com/user-attachments/assets/5aa40033-f6e2-4b41-9a83-b88dbe541d10)
+
+
+### 4.3. helm template
+In some cases, user will use all generated template files from --dry-run command above to apply to K8s cluster. But the dry run command include some non yaml syntax or elements into templates that get generated so it will have error. --dry-run can also use with both installation and upgradation, upgrade output will be completely different from installation because only the differences will be generated. Using --dry-run, we need connection to K8s cluster so template yaml files are validated.
+
+helm template mydb bitnami/mysql --values values.yaml
+
+helm template only generated yaml files format for new installation, never communicates with the kubernetes api server, it doesn't validate these templates, so it doesn't need a active Kubernetes cluster to work. This is great for your ci/cd tools where you don't have access to a kubernetes cluster, but you still want to generate these templates and use them later.
+![image](https://github.com/user-attachments/assets/e341d3fb-12cb-4b23-a419-4ebafa8bee5e)
+
+
+### 4.4. More about Release Records
+- values.yaml changed and upgrade the chart:
+
+![image](https://github.com/user-attachments/assets/5963b791-bf15-4e99-a915-2d451d7146f5)
+
+- new revision is created:
+  
+![image](https://github.com/user-attachments/assets/dd86f64b-60c6-4043-ab3a-061044d4f2fd)
+
+- view 1 secret: kubectl get secret -o yaml sh.helm.release.v1.mydb.v1
+  
+  all the data is encoded:
+  
+![image](https://github.com/user-attachments/assets/ad5aaa50-d29c-4b3c-9223-58181180c35c)
+![image](https://github.com/user-attachments/assets/c89958dd-e0fb-48ff-8968-e4a2cd84e9bf)
+
+
+### 4.5. helm get
+
+If helm list does not give you enough information, you can use helm get to have more details. It contains sub commands and flags
+
+![image](https://github.com/user-attachments/assets/fd1ad25c-af4a-41de-b6d4-e73af0a6cd77)
+
+- Example:
+helm get values mydb: It only shows the custom values , not the default values.
+
+helm get values mydb --all: will show default values.
+
+![image](https://github.com/user-attachments/assets/71ab3ffc-4fed-4ba3-952e-d6cc13ca7223)
+
+
+![image](https://github.com/user-attachments/assets/9e455e87-3bd3-4dad-bd28-28d929d07f5b)
+
+
+### 4.6. helm history
+
+helm history mydb
+
+![image](https://github.com/user-attachments/assets/ec2ac213-d00b-4b23-9403-ddc51cbe2139)
+
+Even when a upgrade or installation fails the version and history for it will be maintained.
+![image](https://github.com/user-attachments/assets/825687ac-7799-4fb2-ade8-dfd8b3659d67)
+
+
+### 4.7. helm rollback
+
+helm rollback myapache 1
+
+![image](https://github.com/user-attachments/assets/e3ad4489-587e-4301-8000-b1265c8bde03)
+
+Even if we uninstall helm chart but we still keep helm history, we can still rollback to previous versions. (helm uninstall mydb --keep-history)
+
+
+
+
+
 
 
 
