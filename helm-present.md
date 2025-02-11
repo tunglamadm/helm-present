@@ -96,6 +96,24 @@ The installation name should be unique per namespace.
 
 ### 3.2. Custom Values
 
+- Option 1 pass in the command line: helm install mydb bitnami/mysq --set auth.rootPassword = test1234
+
+![image](https://github.com/user-attachments/assets/b1a8b14f-f472-4371-96a4-44258f44fb19)
+
+- Option 2: Pass in file values.yaml
+  
+![image](https://github.com/user-attachments/assets/22faf298-a544-4d5f-a031-7445c5c90483)
+
+  Inside values.yaml: helm install mydb bitnami/mysql --values values.yaml
+  
+  ![image](https://github.com/user-attachments/assets/359696f7-3528-4923-a51e-63470c32cb72)
+
+  Check new password applied:
+  
+  ![image](https://github.com/user-attachments/assets/e2b73b93-c805-4a4f-8c45-077b3f02f4c3)
+
+  
+
 
 
 
