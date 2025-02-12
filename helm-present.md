@@ -350,15 +350,74 @@ All the manifest files here has placeholder inside. This is Google Go templating
 ### 5.5. Helpers File
 .tml stands for template
 
-![image](https://github.com/user-attachments/assets/f8b36310-26da-4a8c-89d3-9794638c28e2)
+![image](https://github.com/user-attachments/assets/bc96c219-54ed-4a4a-b138-1bc9cfa6b6e1)
 
-All the other yaml files in this folder are used to generate Kubernetes manifest, which will be used to create Kubernetes resources. This .tpl will not generate any Kubernetes manifest. It will simply have some methods that will be used in all manifest files. So any template methods we want to reuse across these templates can be put into this template file.
+- All the other yaml files in this folder are used to generate Kubernetes manifest, which will be used to create Kubernetes resources. This .tpl will not generate any Kubernetes manifest. It will simply have some methods that will be reused in all manifest files.
+
+- After define is the method name, following lines is the logic, logic stop with {{- end }}
+  
+- Call method in deployment.yaml ( include then method name, include responsible for including method defined in the helpers.tpl)
+  
+ ![image](https://github.com/user-attachments/assets/516a7cb5-7956-4f1d-a53e-9bed62099f50)
+
+ 
+### 5.6. Values yaml
+- Have the default values that will be used across the template files under the templates directory.
+These default values can be overridden by your own values.yaml file.
+
+![image](https://github.com/user-attachments/assets/557f2866-d447-4654-bd93-fc87c41ee954)
+
+- deployment.yaml call values:
+
+  ![image](https://github.com/user-attachments/assets/855cb082-e4d7-4bdd-bcd3-4673ccc427e9)
+
+- Service account is set to true so it will be created
+  
+![image](https://github.com/user-attachments/assets/1511d378-921e-4332-8592-aab098c68d4c)
+![image](https://github.com/user-attachments/assets/41a8f3d4-5f48-4f2a-9b42-8a8bf8528697)
+
+- Some default values are already defined but commented out:
+
+ ![image](https://github.com/user-attachments/assets/7d9d0258-f2b9-40df-b46f-c76fa712b2fc)
+
+ ### 5.7. helm package
+Package chart so that it can be distributed or shared through repositories.
+
+- helm package firstchart/
+    
+![image](https://github.com/user-attachments/assets/94d6be7f-6ea5-465d-a8da-40cc78df65ce)
+
+- helm install understand the package name to do the installation: firstchart-0.1.0.tgz
 
 
+ ### 5.8. helm lint
+ 
+ - This command will scan through all the template files and the values.yaml files, it checks if there are any issues.
 
+      helm lint firstchart
+   
+![image](https://github.com/user-attachments/assets/b0cf1c67-093c-444e-aef6-8123a696d9e8)
 
+- Make sample error in deployment.yaml
+  
+![image](https://github.com/user-attachments/assets/c8329b31-f060-4f56-b1bd-358346f452d3)
+![image](https://github.com/user-attachments/assets/132d1521-721a-455b-b898-66b9ca21ecf2)
 
+## 6. Templates Deep Dive
 
+### 6.1.Template Actions
 
+- One of the basic and most used Helm templating syntax or elements is actions. Actions start with {{ and also end with }}. Within actions, we can use several other elements from the helm templating syntax, such as defining variables, using conditional logic like if, loop, invoking methods.
+-  Anything outside of these action elements will be rendered as it is in the output.
+![image](https://github.com/user-attachments/assets/df0ffc28-f3b3-4781-9eda-02a2e0863cca)
 
+       "-" is to remove unnecessary leading or trailing spaces.
+
+![image](https://github.com/user-attachments/assets/4df8e4b2-fa84-45fe-8672-b465289ac39d)
+
+- Test add action: helm template firstchart
+
+![image](https://github.com/user-attachments/assets/fc3ed37c-f33b-49bc-b7d5-b989c9086737)
+
+  
 
