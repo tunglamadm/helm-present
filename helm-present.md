@@ -253,5 +253,103 @@ The way this command works, it will first check if the installation is already t
 ![image](https://github.com/user-attachments/assets/20f545fe-72be-4773-bff6-887e2b8ad081)
 ![image](https://github.com/user-attachments/assets/4de0fb08-4c50-4664-9d8b-a7f2ed32d51e)
 
+### 4.10. Generate Release Names
+
+helm install bitnami/apache --generate-name
+
+![image](https://github.com/user-attachments/assets/8eec18c7-5cc1-4d41-a1d3-f8cdd01a4fae)
+![image](https://github.com/user-attachments/assets/b9ec1391-b39d-4106-b919-6edec7beeb43)
+
+### 4.11. Wait and Timeout
+The helm install command considers the installation to be successful as soon as the manifest is received by the kubernetes API server it doesn't wait for the pods to be up and running.
+To wait until helm successful install, use --wait option. Default time is 5 minutes, if the installation doesn't complete, if the pods are not up and running within this time the installation will be marked as a failure.
+
+       helm install mywebserver2 bitnami/apache --wait --timeout 5m10s
+
+
+### 4.12. Forceful upgrades
+When using helm upgrade, it will restart those pods whose values have changed, it will not restart all the pods all the time. But if you want to forcefully restart the pods when you do a upgrade, use --force. Helm will delete the current deployment instead of modifying the deployment and it will recreate the deployment (there will be some downtime for the application)
+
+       helm upgrade mywebserver2 bitnami/apache --force
+
+## 5. Create Charts
+
+### 5.1. Create first chart
+
+helm create firstchart
+
+By default helm create command uses the nginx chart to create chart.
+
+![image](https://github.com/user-attachments/assets/52f0de38-24ea-49f9-97eb-4d4cadad893a)
+
+- Chart.yaml file contains the metadata about the chart.
+![image](https://github.com/user-attachments/assets/768c441c-f415-4faa-843d-c23d969302e6)
+
+- charts folder, it will empty when we first create the chart, ut if this chart depends on any other charts those charts will be pulled and stored inside charts folder.
+  
+- templates folder:
+  
+![image](https://github.com/user-attachments/assets/ef3b7a46-99aa-48ae-a602-ffd1f3c81721)
+
+- values.yaml: contains all the values, the default values that will go into the template yaml files
+
+![image](https://github.com/user-attachments/assets/93486c98-d1ff-401e-bc41-7c777c5bdba0)
+
+### 5.2. Install the chart
+
+helm install firstapp firstchart/
+
+Instead of point to bitnami repo, we point to the folder of the chart.
+
+![image](https://github.com/user-attachments/assets/290cdc13-2ac5-4e14-a2f4-7975a0471542)
+
+The NOTES show in the screen comes from NOTES.txt insde templates folder:
+
+![image](https://github.com/user-attachments/assets/cf590128-776e-441c-895a-2e4ae332f943)
+
+
+
+### 5.3. Chart YAML 
+This is the file that has the metadata about project
+
+![image](https://github.com/user-attachments/assets/03b450e7-7903-480f-8df5-fe45b78fa5a3)
+
+- apiVersion: determines the rest of the document, that is the structure that needs to be followed, the elements that can be used, the mandatory elements and the optional elements are determined by the version. In the future, if this version changes, there might be some new mandatory fields that will be included.
+  
+- name: the name of the chart
+  
+- description: information about what this chart does or what this chart is responsible for.
+  
+- type: can be application or library
+  
+  +) when we use a chart to deploy application type will be application
+  
+  +) library will be use in case project will have reusable functions that can be used across charts.   When define a chart as a library project, it will not have any templates and there will be no releases or installations done using that chart. It simply is to define some reusable functions that can be used across other charts, other library charts or other application charts.
+
+- version: the version of the chart starts with zero point 0.1.0 (version number is not fixed, can be any numer)
+
+- appVersion: the application that is being packaged through this chart, depending on the version of application.
+
+- More optional elements in Chart.yaml: https://helm.sh/docs/topics/charts/z
+
+### 5.4. Templates 
+
+![image](https://github.com/user-attachments/assets/8f4badda-7f83-44b9-8f22-eb5fb51c23d1)
+
+All the manifest files here has placeholder inside. This is Google Go templating syntax. You can delete any file that you think it doesn't need for your project or you can add more file inside templates folder.
+
+- deployment.yaml
+
+![image](https://github.com/user-attachments/assets/1a63c7c3-ec68-41ce-9b6f-10455cbb30be)
+
+- Some files will have conditional statement on the 1st line
+  
+![image](https://github.com/user-attachments/assets/f6e166c6-7d38-498b-ba94-bfb2c596c34a)
+![image](https://github.com/user-attachments/assets/d7addad2-f3b7-46ba-a409-8c17a53c7e25)
+
+
+
+
+
 
 
