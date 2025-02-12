@@ -347,6 +347,15 @@ All the manifest files here has placeholder inside. This is Google Go templating
 ![image](https://github.com/user-attachments/assets/f6e166c6-7d38-498b-ba94-bfb2c596c34a)
 ![image](https://github.com/user-attachments/assets/d7addad2-f3b7-46ba-a409-8c17a53c7e25)
 
+### 5.5. Helpers File
+.tml stands for template
+
+![image](https://github.com/user-attachments/assets/f8b36310-26da-4a8c-89d3-9794638c28e2)
+
+All the other yaml files in this folder are used to generate Kubernetes manifest, which will be used to create Kubernetes resources. This .tpl will not generate any Kubernetes manifest. It will simply have some methods that will be used in all manifest files. So any template methods we want to reuse across these templates can be put into this template file.
+
+
+
 
 
 
