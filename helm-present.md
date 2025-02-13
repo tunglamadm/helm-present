@@ -419,5 +419,60 @@ Package chart so that it can be distributed or shared through repositories.
 
 ![image](https://github.com/user-attachments/assets/fc3ed37c-f33b-49bc-b7d5-b989c9086737)
 
-  
+### 6.2. Template Information
+
+Before Values we have dot (.), this dot represents all the information that a template can use and it has sub objects like values, Chart
+
+![image](https://github.com/user-attachments/assets/dd3218fd-07ee-4d02-a659-52308893e31b)
+
+Add custom values in values.yaml
+
+![image](https://github.com/user-attachments/assets/9444285f-6f4b-47de-991f-fa4e496316df)
+
+Add and call custom value in deployment.yaml
+
+![image](https://github.com/user-attachments/assets/07d36d74-82fd-4d6d-b5f5-2dd2e53fca9f)
+
+![image](https://github.com/user-attachments/assets/e908d435-cc1a-4b04-b680-807ffb9bcd7a)
+
+### 6.3. Pipelines
+
+this pipe allows to chain multiple expressions commands or function calls. The output of function on the left side of the pipe will be passed as an input to the function or expression on the right side.
+
+![image](https://github.com/user-attachments/assets/02646bd9-0ae5-42da-b063-87b49ee95e6d)
+
+Test pipe: default is the function that's already available in Helm templating engine or Helm Templating Library.
+If there is no value in data, default function will assign whatever value in side double quote "".
+
+  {{.Values.my.custom.data | default "testdefault" | upper | quote}}
+
+![image](https://github.com/user-attachments/assets/bf26478e-7fe5-4f3d-b801-31ba4c391ec3)
+
+data has test so it will print "TEST"
+
+![image](https://github.com/user-attachments/assets/4ca599f5-9454-4f62-8a66-db8013c22c0c)
+
+![image](https://github.com/user-attachments/assets/f40d72ee-22ce-4f59-add9-1997dd55fbde)
+
+Remove test:
+
+![image](https://github.com/user-attachments/assets/d0e045a2-c0d5-4cba-ac7f-3b63e584f2f4)
+![image](https://github.com/user-attachments/assets/bf01c5c3-e7c9-4510-b1f4-4a59a200889f)
+
+
+### 6.4. Functions
+
+We have use some functions.
+
+nindent stands for new line indent indentation (space in YAML format)
+
+![image](https://github.com/user-attachments/assets/0b0665db-c2eb-453b-b962-c501a2a54574)
+
+When we get that data from values file, Chart file,... we get it as objects. toYaml will convert the current object into YAML so that it can be pushed into the output as YAML
+![image](https://github.com/user-attachments/assets/63e5e5c6-e398-4e36-8809-874c0bf292d1)
+
+More about fuctions: https://helm.sh/docs/chart_template_guide/function_list/
+
+
+
 
