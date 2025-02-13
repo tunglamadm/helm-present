@@ -581,7 +581,7 @@ Because range will go through each element so we can remove toYaml before dot.
 ![image](https://github.com/user-attachments/assets/6ca227f5-fc3d-4612-aa0a-98a3ea57e597)
 
 
-
+### 6.10. Create and Use Custom Template
 
 
 
