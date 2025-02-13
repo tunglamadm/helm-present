@@ -352,13 +352,25 @@ All the manifest files here has placeholder inside. This is Google Go templating
 
 ![image](https://github.com/user-attachments/assets/bc96c219-54ed-4a4a-b138-1bc9cfa6b6e1)
 
-- All the other yaml files in this folder are used to generate Kubernetes manifest, which will be used to create Kubernetes resources. This .tpl will not generate any Kubernetes manifest. It will simply have some methods that will be reused in all manifest files.
+- All the other yaml files in this folder are used to generate Kubernetes manifest, which will be used to create Kubernetes resources. This .tpl will not generate any Kubernetes manifest. It will simply have some methods that will be reused in all manifest files or within this .tpl as well. A method is like a function in programming languages.
+- Before each method will be the comment explain what method does. 
 
-- After define is the method name, following lines is the logic, logic stop with {{- end }}
+ {{/*
+Expand the name of the chart.
+*/}}
+
+
+- After define is the method name with in "", following lines is the logic, logic stop with {{- end }}
+
+- To reuse method in the same .tpl file, we defind include then the method name
+- 
+![image](https://github.com/user-attachments/assets/d5d01121-38c7-4523-85c8-4a3776f6802e)
   
 - Call method in deployment.yaml ( include then method name, include responsible for including method defined in the helpers.tpl)
   
  ![image](https://github.com/user-attachments/assets/516a7cb5-7956-4f1d-a53e-9bed62099f50)
+
+
 
  
 ### 5.6. Values yaml
@@ -472,6 +484,117 @@ When we get that data from values file, Chart file,... we get it as objects. toY
 ![image](https://github.com/user-attachments/assets/63e5e5c6-e398-4e36-8809-874c0bf292d1)
 
 More about fuctions: https://helm.sh/docs/chart_template_guide/function_list/
+
+### 6.5. Use Conditional Logic
+
+- Set a boolean value in values.yaml
+![image](https://github.com/user-attachments/assets/4b99f62c-2c66-4bf6-8dfb-0a8deb09af2a)
+
+- Write a logic inside deployment.yaml
+
+{{- if .Values.my.flag }}             (Start with if and follow the condition, flag now is true)
+{{"Output of if" | nindent 2}}        (This is the logic, we can have more than 1 line)
+{{- else}}                            (This will run if the flag is false)
+{{"Output of else" | nindent 2}}        (Logic of else)
+{{- end}}                             (End the logic)
+
+![image](https://github.com/user-attachments/assets/79260641-9889-4b61-817f-b57655fe7cd2)
+
+- Check the result: helm template firstchart
+
+flag is true
+
+![image](https://github.com/user-attachments/assets/c79d921d-d456-40c6-8f34-37351ca40bdf)
+
+flag is false
+
+![image](https://github.com/user-attachments/assets/35d41990-bda8-41c9-98f8-d82128b7d121)
+
+
+- We also have {{if not}}, it will opposite with {{if}}
+  
+![image](https://github.com/user-attachments/assets/c1ea5d54-d630-444a-8e53-c61765edf274)
+
+
+### 6.6. Use With
+
+- Add values list inside values.yaml
+
+![image](https://github.com/user-attachments/assets/857c0071-93d6-4770-9f5d-b5a0a036e4e1)
+
+This work only the values element in values.yaml is a list. If it is empty, nothing will be in the output.
+Look at the dot (.), its scope now changed. When you use with block or condition, the scope will be the current element which we are checking using with which is values inside values.yaml. Dot will point to the list of values.
+
+If you want to point dot back to root, put $ before the dot: $.
+
+![image](https://github.com/user-attachments/assets/ab492440-1593-4b00-bb14-46897d8e94fa)
+
+- Check the result: helm template firstchart
+  
+![image](https://github.com/user-attachments/assets/8439c413-748a-4c6e-81ae-151470bd2606)
+
+
+- We can also add else condition, it will execute whenever the values list is empty:
+  
+  ![image](https://github.com/user-attachments/assets/c281217f-d389-4ddd-b3f2-aeba6fdc64dd)
+
+### 6.7. Define Variables
+
+- values.yaml file
+
+![image](https://github.com/user-attachments/assets/eab44b09-6aa9-429d-8539-96df5954738e)
+
+
+
+Value for variable can be hardcoded or call be pass from values file
+
+![image](https://github.com/user-attachments/assets/f23171c5-c7b4-4a8a-9549-6fad92883217)
+![image](https://github.com/user-attachments/assets/9ce0aca5-446a-4b15-8c0a-55e3fc7dbb09)
+![image](https://github.com/user-attachments/assets/56538457-267d-4e30-a8a8-c1a87108c328)
+
+You can assign new values to the same variable, but they have to be the same type. In this example .Values.my.flag return a boolean type, new value should also a type of boolean. If not it will use the first value assigned.
+
+![image](https://github.com/user-attachments/assets/27d6bc08-78f9-480b-807d-4b231e07c7a9)
+![image](https://github.com/user-attachments/assets/7914777c-6bf9-4ac7-a6af-b2dd68280cca)
+
+
+### 6.8. Use Loops
+
+Range is the looping construct in go templating.
+dot here also changed scope as with above.
+Because range will go through each element so we can remove toYaml before dot.
+
+![image](https://github.com/user-attachments/assets/90307096-4d96-463b-a870-1f444a77905f)
+
+
+
+- Check the result: helm template firstchart
+- 
+![image](https://github.com/user-attachments/assets/7b11e629-9701-4e9e-92db-43a41fe1c8e4)
+
+
+### 6.9. helm get manifest
+
+- To fetch the manifest that was used during the installation of this particular chart. This is useful to compare the yaml or the templates that were used during the installation and what currently exists on the Kubernetes cluster (kubectl get to get what currently exists on the cluster)
+  
+  helm get manifest
+![image](https://github.com/user-attachments/assets/6ca227f5-fc3d-4612-aa0a-98a3ea57e597)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
