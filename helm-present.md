@@ -583,6 +583,11 @@ Because range will go through each element so we can remove toYaml before dot.
 
 ### 6.10. Create and Use Custom Template
 
+- values.yaml file
+
+  ![image](https://github.com/user-attachments/assets/0b494f20-ae41-446b-b46d-9b0aea90d064)
+
+Call myValues in _helpers.tpl file:
 
 
 
