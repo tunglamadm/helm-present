@@ -1,4 +1,4 @@
-# Introduction to Helm - Instructor Guide
+![image](https://github.com/user-attachments/assets/006438aa-84fc-402b-8055-f57472c4b764)![image](https://github.com/user-attachments/assets/40707958-6bab-45f5-a536-b76b7e285b56)# Introduction to Helm - Instructor Guide
 
 ## 1. What is Helm
 Helm is a package manager for Kubernetes that simplifies the deployment and management of applications. It allows you to define, install, and upgrade complex Kubernetes applications using Helm charts.
@@ -569,7 +569,7 @@ Because range will go through each element so we can remove toYaml before dot.
 
 
 - Check the result: helm template firstchart
-- 
+  
 ![image](https://github.com/user-attachments/assets/7b11e629-9701-4e9e-92db-43a41fe1c8e4)
 
 
@@ -585,18 +585,118 @@ Because range will go through each element so we can remove toYaml before dot.
 
 - values.yaml file
 
-  ![image](https://github.com/user-attachments/assets/0b494f20-ae41-446b-b46d-9b0aea90d064)
-
-Call myValues in _helpers.tpl file:
+![image](https://github.com/user-attachments/assets/72d6889c-4431-4c0b-ac03-76758a3ee964)
 
 
+- Call myValues in _helpers.tpl file:
+  
++) My Custom Template: Comment about the custom template
+
++) {{- define "firstchart.mytemplate" -}} : template name
++) {{- default .Chart.Name .Values.myValue}}:  Logic of the template, you can define any custom logic.
+   "default .Chart.Name" giá trị mặc định được đưa vào nếu ".Values.myValue" là rỗng.
+
+![image](https://github.com/user-attachments/assets/47ff671e-fd31-4e1c-b7a8-c83e9d2af894)
+
+- Call template trong deployment.yaml
+
+  ![image](https://github.com/user-attachments/assets/404b5d1e-a8b7-497e-a0d3-e6696d6b744f)
+
+- Check the result: helm template firstchart
+
+      .Values.myValue có giá trị:
+![image](https://github.com/user-attachments/assets/1dfd3b02-f6bb-4daa-a0c4-19a7f75d84cd)
+
+      .Values.myValue rỗng:
+![image](https://github.com/user-attachments/assets/8205d9bb-087d-4cd8-b011-8bbda6147a03)
 
 
 
+## 7. Advanced Charts
+
+### 7.1. Add Dependencies
+
+- Add in Chart.yaml file:
+
+version can be found by: helm search repo mysql
+
+![image](https://github.com/user-attachments/assets/e1c4a71c-17ea-42f1-8626-9471a7ce5621)
+
+charts folder now is emppty
+![image](https://github.com/user-attachments/assets/f2c5bc04-f139-4edd-9584-12df6720b5f6)
+
+- Update the chart and now charts folder has mysql dependecy: helm dependency update firstchart
+  ![image](https://github.com/user-attachments/assets/94d6e814-ba53-4335-8138-6e36e8450c6e)
+![image](https://github.com/user-attachments/assets/6cab831d-f6b4-4029-a3e0-a40df64abfca)
+
+- Install firstchart then check mysql is also installed
+
+![image](https://github.com/user-attachments/assets/31e31b88-9819-4d54-ad44-796a1516bcfa)
+![image](https://github.com/user-attachments/assets/70605f1b-20b6-4c04-a138-06b8d9abf40f)
 
 
+### Tips:
+Instead of using entire repository URL, we can replace it by the name of the repo we have added in current system
+
+![image](https://github.com/user-attachments/assets/2c14449c-558c-48c3-b226-cc6d36698255)
+
+![image](https://github.com/user-attachments/assets/754bec21-4fbd-44ec-99ac-e8a4104c7820)
 
 
+### 7.2. Use Dependencies Conditionally
+
+- Define condition in values.yaml
+![image](https://github.com/user-attachments/assets/71f2c9c7-4cc2-468b-b256-10a7b7154971)
+
+
+- Inside Chart.yaml, add condition dependency:
+  ![image](https://github.com/user-attachments/assets/c8b24b7e-f959-4170-a074-0cf216a5fb95)
+
+- Reinstall the chart, enabled false so mysql will not be installed
+
+![image](https://github.com/user-attachments/assets/5443bf62-80b9-4def-bd7f-28b78dc0f14f)
+
+### 7.3. Use Multiple Conditional Dependencies
+
+- values.yaml
+
+![image](https://github.com/user-attachments/assets/f378989c-b099-4938-9056-de45a6d336eb)
+
+- Find version for apache then add it in Chart.yaml file:
+![image](https://github.com/user-attachments/assets/42999989-0904-4793-8d91-ddf2f4da57a2)
+
+![image](https://github.com/user-attachments/assets/13c5d7ec-0c02-4fa4-bf26-5ef5cf3bd008)
+
+
+- There is another way to use common tag for all dependencies:
+  +) Define in values.yaml
+![image](https://github.com/user-attachments/assets/5c1715bf-a101-4f3d-a448-a3e4224689fc)
+
+  + Replace it in Chart.yaml
+    
+![image](https://github.com/user-attachments/assets/dfcbeb7b-7de1-4295-a1ab-13b4a86a14e8)
+
+  +) helm dependency update firstchart
+![image](https://github.com/user-attachments/assets/c045ae13-0df5-472f-8b82-def043898a82)
+
+![image](https://github.com/user-attachments/assets/5f0da16f-776d-432a-83fc-7d0c57b3abee)
+
+![image](https://github.com/user-attachments/assets/4eec629c-140d-4561-a18a-2e9189ae6a4a)
+
+
+### 7.4. Pass values to dependencies
+
+If you want to override default values, you can do that from your own chart.
+
+- values.yaml
+  mysql is the name of the chart we defined in Chart.yaml
+![image](https://github.com/user-attachments/assets/c0b3d1fb-74c8-4e81-b238-5c481ef69d9a)
+
+- Chart.yaml
+  ![image](https://github.com/user-attachments/assets/3d224b01-6906-4a8c-9599-b1b5ad5eff28)
+
+- Reinstall chart then check
+![image](https://github.com/user-attachments/assets/f0c8f47e-30b3-40f6-bc3d-59c1cf72f934)
 
 
 
