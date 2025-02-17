@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/006438aa-84fc-402b-8055-f57472c4b764)![image](https://github.com/user-attachments/assets/40707958-6bab-45f5-a536-b76b7e285b56)# Introduction to Helm - Instructor Guide
+# Introduction to Helm - Instructor Guide
 
 ## 1. What is Helm
 Helm is a package manager for Kubernetes that simplifies the deployment and management of applications. It allows you to define, install, and upgrade complex Kubernetes applications using Helm charts.
@@ -697,6 +697,100 @@ If you want to override default values, you can do that from your own chart.
 
 - Reinstall chart then check
 ![image](https://github.com/user-attachments/assets/f0c8f47e-30b3-40f6-bc3d-59c1cf72f934)
+
+
+
+### 7.5. Hooks
+
+- Hook is used if you want to take some special action during the helm release process.
+  
+Example: store some data into database, back up database,...
+
+- Hook likes any other template file under Templates folder. The difference is in the annotations, you can configure when hook should be created.
+You can create pods, deployments, service accounts,... using hooks.
+
+![image](https://github.com/user-attachments/assets/36831793-0b9e-4e3f-970f-eec3c3ae4488)
+
+- Hook values:
+  
++) pre-install:	Executes after templates are rendered, but before any resources are created in Kubernetes
+  
++) post-install:	Executes after all resources are loaded into Kubernetes
+
++) pre-delete:	Executes on a deletion request before any resources are deleted from Kubernetes
+
++) post-delete:	Executes on a deletion request after all of the release's resources have been deleted
+
++) pre-upgrade:	Executes on an upgrade request after templates are rendered, but before any resources are updated
+
++) post-upgrade:	Executes on an upgrade request after all resources have been upgraded
+
++) pre-rollback:	Executes on a rollback request after templates are rendered, but before any resources are rolled back
+
++) post-rollback:	Executes on a rollback request after all resources have been modified
+
++) test:	Executes when the Helm test subcommand is invoked ( view test docs)
+
+- Hook deletion policies: It is possible to define policies that determine when to delete corresponding hook resources. Hook deletion policies are defined using the following annotation:
+
+          annotations:
+            "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+
++) before-hook-creation:	Delete the previous resource before a new hook is launched (default)
+
++) hook-succeeded:	Delete the resource after the hook is successfully executed
+
++) hook-failed:	Delete the resource if the hook failed during execution
+
+- Hook priority (hook-weight): It can be negitive number, zero or positive number
+  
++) Lower numbers run first (higher priority)
+  
++) Higher numbers run later (lower priority)
+
+- Create a hookpood.yaml
+  
+![image](https://github.com/user-attachments/assets/223d9488-5281-4524-bb7f-0111b1bf51db)
+
+![image](https://github.com/user-attachments/assets/90e0acd3-1158-40b3-ab57-c3138311562f)
+
+
+  +) Install then check the chart: helm install myapp firstchart
+  ![image](https://github.com/user-attachments/assets/b77a036b-3247-49ff-8701-17dd75843ae8)
+
+### 7.6. Test your chart
+
+- Inside templates folder will contain test folder:
+
+![image](https://github.com/user-attachments/assets/5d97cdce-234b-4ffd-8af6-846482df2792)
+
+- test-connection.yaml
+
+![image](https://github.com/user-attachments/assets/1c80da92-8201-496f-bcf9-0eeb4b872810)
+  
++) annotations: "helm.sh/hook": test
+
++) This will run only when we use "helm test" command
+
++) Logic for this test pod: you can define you own logic
+
+      command: ['wget']
+      
+            args: ['{{ include "firstchart.fullname" . }}:{{ .Values.service.port }}']
+
+executes a wget command, which will connect to the service
+
+![image](https://github.com/user-attachments/assets/21007c71-6973-4a22-b42d-8b6826aaf2ca)
+
+- Run the test: helm test myapp
+
+![image](https://github.com/user-attachments/assets/96450348-3e8c-4012-9e9e-01c37a41dbb0)
+
+If the test fail, we can describe the pod and see the logs.
+
+
+
+
 
 
 
