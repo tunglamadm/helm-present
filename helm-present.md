@@ -218,6 +218,12 @@ helm get values mydb --all: will show default values.
 
 ![image](https://github.com/user-attachments/assets/9e455e87-3bd3-4dad-bd28-28d929d07f5b)
 
+- To fetch the manifest that was used during the installation of this particular chart. This is useful to compare the yaml or the templates that were used during the installation and what currently exists on the Kubernetes cluster (kubectl get to get what currently exists on the cluster)
+  
+  helm get manifest
+  
+![image](https://github.com/user-attachments/assets/6ca227f5-fc3d-4612-aa0a-98a3ea57e597)
+
 
 ### 4.6. helm history
 
@@ -415,206 +421,9 @@ Package chart so that it can be distributed or shared through repositories.
 ![image](https://github.com/user-attachments/assets/c8329b31-f060-4f56-b1bd-358346f452d3)
 ![image](https://github.com/user-attachments/assets/132d1521-721a-455b-b898-66b9ca21ecf2)
 
-## 6. Templates Deep Dive
+## 6. Advanced Charts
 
-### 6.1.Template Actions
-
-- One of the basic and most used Helm templating syntax or elements is actions. Actions start with {{ and also end with }}. Within actions, we can use several other elements from the helm templating syntax, such as defining variables, using conditional logic like if, loop, invoking methods.
--  Anything outside of these action elements will be rendered as it is in the output.
-![image](https://github.com/user-attachments/assets/df0ffc28-f3b3-4781-9eda-02a2e0863cca)
-
-       "-" is to remove unnecessary leading or trailing spaces.
-
-![image](https://github.com/user-attachments/assets/4df8e4b2-fa84-45fe-8672-b465289ac39d)
-
-- Test add action: helm template firstchart
-
-![image](https://github.com/user-attachments/assets/fc3ed37c-f33b-49bc-b7d5-b989c9086737)
-
-### 6.2. Template Information
-
-Before Values we have dot (.), this dot represents all the information that a template can use and it has sub objects like values, Chart
-
-![image](https://github.com/user-attachments/assets/dd3218fd-07ee-4d02-a659-52308893e31b)
-
-Add custom values in values.yaml
-
-![image](https://github.com/user-attachments/assets/9444285f-6f4b-47de-991f-fa4e496316df)
-
-Add and call custom value in deployment.yaml
-
-![image](https://github.com/user-attachments/assets/07d36d74-82fd-4d6d-b5f5-2dd2e53fca9f)
-
-![image](https://github.com/user-attachments/assets/e908d435-cc1a-4b04-b680-807ffb9bcd7a)
-
-### 6.3. Pipelines
-
-this pipe allows to chain multiple expressions commands or function calls. The output of function on the left side of the pipe will be passed as an input to the function or expression on the right side.
-
-![image](https://github.com/user-attachments/assets/02646bd9-0ae5-42da-b063-87b49ee95e6d)
-
-Test pipe: default is the function that's already available in Helm templating engine or Helm Templating Library.
-If there is no value in data, default function will assign whatever value in side double quote "".
-
-  {{.Values.my.custom.data | default "testdefault" | upper | quote}}
-
-![image](https://github.com/user-attachments/assets/bf26478e-7fe5-4f3d-b801-31ba4c391ec3)
-
-data has test so it will print "TEST"
-
-![image](https://github.com/user-attachments/assets/4ca599f5-9454-4f62-8a66-db8013c22c0c)
-
-![image](https://github.com/user-attachments/assets/f40d72ee-22ce-4f59-add9-1997dd55fbde)
-
-Remove test:
-
-![image](https://github.com/user-attachments/assets/d0e045a2-c0d5-4cba-ac7f-3b63e584f2f4)
-![image](https://github.com/user-attachments/assets/bf01c5c3-e7c9-4510-b1f4-4a59a200889f)
-
-
-### 6.4. Functions
-
-We have use some functions.
-
-nindent stands for new line indent indentation (space in YAML format)
-
-![image](https://github.com/user-attachments/assets/0b0665db-c2eb-453b-b962-c501a2a54574)
-
-When we get that data from values file, Chart file,... we get it as objects. toYaml will convert the current object into YAML so that it can be pushed into the output as YAML
-![image](https://github.com/user-attachments/assets/63e5e5c6-e398-4e36-8809-874c0bf292d1)
-
-More about fuctions: https://helm.sh/docs/chart_template_guide/function_list/
-
-### 6.5. Use Conditional Logic
-
-- Set a boolean value in values.yaml
-![image](https://github.com/user-attachments/assets/4b99f62c-2c66-4bf6-8dfb-0a8deb09af2a)
-
-- Write a logic inside deployment.yaml
-
-{{- if .Values.my.flag }}             (Start with if and follow the condition, flag now is true)
-{{"Output of if" | nindent 2}}        (This is the logic, we can have more than 1 line)
-{{- else}}                            (This will run if the flag is false)
-{{"Output of else" | nindent 2}}        (Logic of else)
-{{- end}}                             (End the logic)
-
-![image](https://github.com/user-attachments/assets/79260641-9889-4b61-817f-b57655fe7cd2)
-
-- Check the result: helm template firstchart
-
-flag is true
-
-![image](https://github.com/user-attachments/assets/c79d921d-d456-40c6-8f34-37351ca40bdf)
-
-flag is false
-
-![image](https://github.com/user-attachments/assets/35d41990-bda8-41c9-98f8-d82128b7d121)
-
-
-- We also have {{if not}}, it will opposite with {{if}}
-  
-![image](https://github.com/user-attachments/assets/c1ea5d54-d630-444a-8e53-c61765edf274)
-
-
-### 6.6. Use With
-
-- Add values list inside values.yaml
-
-![image](https://github.com/user-attachments/assets/857c0071-93d6-4770-9f5d-b5a0a036e4e1)
-
-This work only the values element in values.yaml is a list. If it is empty, nothing will be in the output.
-Look at the dot (.), its scope now changed. When you use with block or condition, the scope will be the current element which we are checking using with which is values inside values.yaml. Dot will point to the list of values.
-
-If you want to point dot back to root, put $ before the dot: $.
-
-![image](https://github.com/user-attachments/assets/ab492440-1593-4b00-bb14-46897d8e94fa)
-
-- Check the result: helm template firstchart
-  
-![image](https://github.com/user-attachments/assets/8439c413-748a-4c6e-81ae-151470bd2606)
-
-
-- We can also add else condition, it will execute whenever the values list is empty:
-  
-  ![image](https://github.com/user-attachments/assets/c281217f-d389-4ddd-b3f2-aeba6fdc64dd)
-
-### 6.7. Define Variables
-
-- values.yaml file
-
-![image](https://github.com/user-attachments/assets/eab44b09-6aa9-429d-8539-96df5954738e)
-
-
-
-Value for variable can be hardcoded or call be pass from values file
-
-![image](https://github.com/user-attachments/assets/f23171c5-c7b4-4a8a-9549-6fad92883217)
-![image](https://github.com/user-attachments/assets/9ce0aca5-446a-4b15-8c0a-55e3fc7dbb09)
-![image](https://github.com/user-attachments/assets/56538457-267d-4e30-a8a8-c1a87108c328)
-
-You can assign new values to the same variable, but they have to be the same type. In this example .Values.my.flag return a boolean type, new value should also a type of boolean. If not it will use the first value assigned.
-
-![image](https://github.com/user-attachments/assets/27d6bc08-78f9-480b-807d-4b231e07c7a9)
-![image](https://github.com/user-attachments/assets/7914777c-6bf9-4ac7-a6af-b2dd68280cca)
-
-
-### 6.8. Use Loops
-
-Range is the looping construct in go templating.
-dot here also changed scope as with above.
-Because range will go through each element so we can remove toYaml before dot.
-
-![image](https://github.com/user-attachments/assets/90307096-4d96-463b-a870-1f444a77905f)
-
-
-
-- Check the result: helm template firstchart
-  
-![image](https://github.com/user-attachments/assets/7b11e629-9701-4e9e-92db-43a41fe1c8e4)
-
-
-### 6.9. helm get manifest
-
-- To fetch the manifest that was used during the installation of this particular chart. This is useful to compare the yaml or the templates that were used during the installation and what currently exists on the Kubernetes cluster (kubectl get to get what currently exists on the cluster)
-  
-  helm get manifest
-![image](https://github.com/user-attachments/assets/6ca227f5-fc3d-4612-aa0a-98a3ea57e597)
-
-
-### 6.10. Create and Use Custom Template
-
-- values.yaml file
-
-![image](https://github.com/user-attachments/assets/72d6889c-4431-4c0b-ac03-76758a3ee964)
-
-
-- Call myValues in _helpers.tpl file:
-  
-+) My Custom Template: Comment about the custom template
-
-+) {{- define "firstchart.mytemplate" -}} : template name
-+) {{- default .Chart.Name .Values.myValue}}:  Logic of the template, you can define any custom logic.
-   "default .Chart.Name" giá trị mặc định được đưa vào nếu ".Values.myValue" là rỗng.
-
-![image](https://github.com/user-attachments/assets/47ff671e-fd31-4e1c-b7a8-c83e9d2af894)
-
-- Call template trong deployment.yaml
-
-  ![image](https://github.com/user-attachments/assets/404b5d1e-a8b7-497e-a0d3-e6696d6b744f)
-
-- Check the result: helm template firstchart
-
-      .Values.myValue có giá trị:
-![image](https://github.com/user-attachments/assets/1dfd3b02-f6bb-4daa-a0c4-19a7f75d84cd)
-
-      .Values.myValue rỗng:
-![image](https://github.com/user-attachments/assets/8205d9bb-087d-4cd8-b011-8bbda6147a03)
-
-
-
-## 7. Advanced Charts
-
-### 7.1. Add Dependencies
+### 6.1. Add Dependencies
 
 - Add in Chart.yaml file:
 
@@ -643,7 +452,7 @@ Instead of using entire repository URL, we can replace it by the name of the rep
 ![image](https://github.com/user-attachments/assets/754bec21-4fbd-44ec-99ac-e8a4104c7820)
 
 
-### 7.2. Use Dependencies Conditionally
+### 6.2. Use Dependencies Conditionally
 
 - Define condition in values.yaml
 ![image](https://github.com/user-attachments/assets/71f2c9c7-4cc2-468b-b256-10a7b7154971)
@@ -656,7 +465,7 @@ Instead of using entire repository URL, we can replace it by the name of the rep
 
 ![image](https://github.com/user-attachments/assets/5443bf62-80b9-4def-bd7f-28b78dc0f14f)
 
-### 7.3. Use Multiple Conditional Dependencies
+### 6.3. Use Multiple Conditional Dependencies
 
 - values.yaml
 
@@ -684,7 +493,7 @@ Instead of using entire repository URL, we can replace it by the name of the rep
 ![image](https://github.com/user-attachments/assets/4eec629c-140d-4561-a18a-2e9189ae6a4a)
 
 
-### 7.4. Pass values to dependencies
+### 6.4. Pass values to dependencies
 
 If you want to override default values, you can do that from your own chart.
 
@@ -699,8 +508,7 @@ If you want to override default values, you can do that from your own chart.
 ![image](https://github.com/user-attachments/assets/f0c8f47e-30b3-40f6-bc3d-59c1cf72f934)
 
 
-
-### 7.5. Hooks
+### 6.5. Hooks
 
 - Hook is used if you want to take some special action during the helm release process.
   
@@ -758,7 +566,7 @@ You can create pods, deployments, service accounts,... using hooks.
   +) Install then check the chart: helm install myapp firstchart
   ![image](https://github.com/user-attachments/assets/b77a036b-3247-49ff-8701-17dd75843ae8)
 
-### 7.6. Test your chart
+### 6.6. Test your chart
 
 - Inside templates folder will contain test folder:
 
