@@ -24,6 +24,7 @@ Helm uses file called Values.yaml,  which can pass parameters to template manife
 
 ### Intelligent Deployments
 It knows the order in which Kubernetes resources should be created. It will automatically deploy with that order.
+
 ![image](https://github.com/user-attachments/assets/5df24831-1be0-47e1-9e0d-27b5aab817da)
 
 ### Life Cycle Hooks
