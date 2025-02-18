@@ -46,13 +46,13 @@ When upgrades, it will create another revision for it.
 
 ### Dynamic Configuration
 Helm uses file called Values.yaml,  which can pass parameters to template manifests in Helm Chart
-
+---
 ![image](https://github.com/user-attachments/assets/e4ac3384-4d93-4ea1-a58b-d6f3e0a9b55c)
 
 ### Intelligent Deployments
 It knows the order in which Kubernetes resources should be created. It will automatically deploy with that order.
 ![image](https://github.com/user-attachments/assets/5df24831-1be0-47e1-9e0d-27b5aab817da)
-
+---
 ### Life Cycle Hooks
 If there is any work which is not directly related to Kubernetes, but it has to be done during the installation or upgradation helm allows us to write hooks that can be hooked into the lifecycle events like installation, upgrade, uninstallation,... This could be writing data to database, backing up a database or making sure that the Kubernetes cluster is in a required state.
 
@@ -62,13 +62,13 @@ Charts are stored in a chart repository.
                                   https://bitnami.com/stacks/helm
                                   
 ![image](https://github.com/user-attachments/assets/9622ebb7-b5b2-49e3-9a16-e91209154074)
-
+---
 You can look at the source of the charts here: https://github.com/bitnami/charts
 ![image](https://github.com/user-attachments/assets/d45627f1-3a31-423d-986e-2a8869fcc390)
 
 Each chart will have a templates folder, a Chart.yaml file and the values.yaml
 ![image](https://github.com/user-attachments/assets/609fa330-fdf0-4bae-be49-2eb8db60d096)
-
+---
 ## 3. Work with chart repositories
 helm repo list
 
