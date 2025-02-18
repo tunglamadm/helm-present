@@ -201,8 +201,11 @@ helm install mydb bitnami/mysql (https://github.com/bitnami/charts/tree/main/bit
 
 ![image](https://github.com/user-attachments/assets/3a5ab38d-7c98-4a2f-84f6-661105f435f4)
 
+helm install mydb bitnami/mysql --values values.yaml --dry-run
 
 ![image](https://github.com/user-attachments/assets/5aa40033-f6e2-4b41-9a83-b88dbe541d10)
+
+helm template mydb bitnami/mysql --values values.yaml
 
 ![image](https://github.com/user-attachments/assets/e341d3fb-12cb-4b23-a419-4ebafa8bee5e)
 
@@ -239,6 +242,12 @@ helm get values mydb --all: will show default values.
 
 
 ![image](https://github.com/user-attachments/assets/9e455e87-3bd3-4dad-bd28-28d929d07f5b)
+
+- To fetch the manifest that was used during the installation of this particular chart. This is useful to compare the yaml or the templates that were used during the installation and what currently exists on the Kubernetes cluster (kubectl get to get what currently exists on the cluster)
+  
+  helm get manifest
+  
+![image](https://github.com/user-attachments/assets/6ca227f5-fc3d-4612-aa0a-98a3ea57e597)
 
 
 ### 4.5. helm history
@@ -595,15 +604,7 @@ Because range will go through each element so we can remove toYaml before dot.
 ![image](https://github.com/user-attachments/assets/7b11e629-9701-4e9e-92db-43a41fe1c8e4)
 
 
-### 6.9. helm get manifest
-
-- To fetch the manifest that was used during the installation of this particular chart. This is useful to compare the yaml or the templates that were used during the installation and what currently exists on the Kubernetes cluster (kubectl get to get what currently exists on the cluster)
-  
-  helm get manifest
-![image](https://github.com/user-attachments/assets/6ca227f5-fc3d-4612-aa0a-98a3ea57e597)
-
-
-### 6.10. Create and Use Custom Template
+### 6.9. Create and Use Custom Template
 
 - values.yaml file
 
