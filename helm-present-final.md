@@ -355,7 +355,7 @@ This is the file that has the metadata about project
   
   +) when we use a chart to deploy application type will be application
   
-  +) library will be used in case project will have reusable functions that can be used across charts.   When define a chart as a library project, it will not have any templates and there will be no releases or installations done using that chart. It simply is to define some reusable functions that can be used across other charts, other library charts or other application charts.
+  +) library will be used in case project will have reusable functions that can be used across charts.   When define a chart as a library project, it will not have any templates and there will be no releases or installations done using that chart. It simply is to define some reusable functions that can be used across other library charts or other application charts.
 
 - version: the version of the chart starts with zero point 0.1.0 (version number is not fixed, can be any numer)
 
@@ -383,7 +383,7 @@ All the manifest files here has placeholder inside. This is Google Go templating
 
 ![image](https://github.com/user-attachments/assets/bc96c219-54ed-4a4a-b138-1bc9cfa6b6e1)
 
-- All the other yaml files in this folder are used to generate Kubernetes manifest, which will be used to create Kubernetes resources. This .tpl will not generate any Kubernetes manifest. It will simply have some methods that will be reused in all manifest files or within this .tpl as well. A method is like a function in programming languages.
+- All the other yaml files in templates folder are used to generate Kubernetes manifest, which will be used to create Kubernetes resources. This .tpl will not generate any Kubernetes manifest. It will simply have some methods that will be reused in all manifest files or within this .tpl as well. A method is like a function in programming languages.
 - Before each method will be the comment explain what method does. 
 
  {{/*
@@ -394,7 +394,7 @@ Expand the name of the chart.
 - After define is the method name with in "", following lines is the logic, logic stop with {{- end }}
 
 - To reuse method in the same .tpl file, we defind include then the method name
-- 
+  
 ![image](https://github.com/user-attachments/assets/d5d01121-38c7-4523-85c8-4a3776f6802e)
   
 - Call method in deployment.yaml ( include then method name, include responsible for including method defined in the helpers.tpl)
