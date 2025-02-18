@@ -31,9 +31,12 @@ It knows the order in which Kubernetes resources should be created. It will auto
 If there is any work which is not directly related to Kubernetes, but it has to be done during the installation or upgradation helm allows us to write hooks that can be hooked into the lifecycle events like installation, upgrade, uninstallation,... This could be writing data to database, backing up a database or making sure that the Kubernetes cluster is in a required state.
 
 ## 2. Charts and Repos
-Charts are stored in a chart repository.
+- Charts are stored in a chart repository.
+  
+  Example: https://bitnami.com/stacks/helm
+  
 ![image](https://github.com/user-attachments/assets/b054c033-37c6-4fc9-aff4-6fe711e552a5)
-                                  https://bitnami.com/stacks/helm
+                                  
                                   
 ![image](https://github.com/user-attachments/assets/9622ebb7-b5b2-49e3-9a16-e91209154074)
 
@@ -49,6 +52,7 @@ helm repo list
 helm repo add bitnami https://charts.bitnami.com/bitnami
 
 helm repo remove bitnami
+
 ![image](https://github.com/user-attachments/assets/40cddfea-e79a-4849-b002-b5cb44112983)
 
 
@@ -66,6 +70,7 @@ helm search repo apache --versions (show older versions)
 
 ### 3.1. Install Helm chart
 - Install Helm chart
+  
 helm install mydb bitnami/mysql
 ![image](https://github.com/user-attachments/assets/90581501-c8a4-4b7a-a422-6dcdd37f9fe9)
 Successfully deployed helm chart, it will show the result and also the related instructions about the chart installed
@@ -102,10 +107,12 @@ The installation name should be unique per namespace.
 ![image](https://github.com/user-attachments/assets/b1a8b14f-f472-4371-96a4-44258f44fb19)
 
 - Option 2: Pass in file values.yaml
+
+  helm install mydb bitnami/mysql --values values.yaml
   
 ![image](https://github.com/user-attachments/assets/22faf298-a544-4d5f-a031-7445c5c90483)
 
-  Inside values.yaml: helm install mydb bitnami/mysql --values values.yaml
+  Inside values.yaml: 
   
   ![image](https://github.com/user-attachments/assets/359696f7-3528-4923-a51e-63470c32cb72)
 
@@ -145,11 +152,13 @@ Helm will generate the Kubernetes templates. It will compare them to the old tem
 kubectl get secret
 
 ![image](https://github.com/user-attachments/assets/d300d0e6-58b6-4c6c-84ec-b345f37bdc6a)
+
 Everytime we do installation or upgrade, it will create a secret, this is release record. This secret record will have the entire information about installation.
 
 When you uninstall a chart, if you want to retain the secret records for rollback,... you can use --keep-history: helm uninstall mydb --keep-history
 
 ![image](https://github.com/user-attachments/assets/f071f326-52bd-4526-a712-45ae229666e1)
+
 
 
 ## 4. Advanced commands
@@ -158,35 +167,47 @@ When you uninstall a chart, if you want to retain the secret records for rollbac
 
 helm install mydb bitnami/mysql (https://github.com/bitnami/charts/tree/main/bitnami/mysql)
 
-- Load the chart and its dependecies: the entire chart will be loaded and also its dependecies if needed.
+- Load the chart and its dependecies:
   
-- Parse the values.yaml.
-  
-- Generate the yaml: take the values provided, override the default values, generate the template yaml using those values by substituting values in the template.
-  
-- Parse the YAML to kube objects and validate: it will parse those yamls into Kubernetes objects, validate those objects against Kubernetes schema to ensure that they can be created and they are complying with the kubernetes schema.
-  
-- Generate YAML and send to kube cluster.
+ +) Helm fetches the specified chart (bitnami/mysql) and loads it locally.
+ 
+ +) If the chart has dependencies (defined in the Chart.yaml file), Helm ensures that those dependencies are also downloaded and loaded. Dependencies are defined using the requirements.yaml or Chart.yaml.
+ 
+- Parse the values.yaml:
 
-### 4.2. helm --dry-run
+ +) Helm reads the default values from the chart's values.yaml file.
+ 
+ +) If custom values are provided (e.g., using a --values or --set flag), Helm overrides the defaults with the provided values.
 
-helm install mydb bitnami/mysql --values values.yaml --dry-run
+- Generate the yaml:
 
-This option will load this chart, substitute the values through values.yaml. Render the required kubernetes templates yaml file. But it will not creat resource in K8s cluster. Useful for debugging and seeing what we configured in the chart.
+ +) Helm takes the parsed values and substitutes them into the chart's templates (defined in the templates/ directory).
+ 
+ +) This process generates Kubernetes YAML manifests for the resources defined in the chart.
+  
+- Parse the YAML to kube objects and validate:
+
+ +) The generated YAML manifests are parsed into Kubernetes objects.
+  
+ +) Helm validates these objects against the Kubernetes API schema to ensure they are valid and conform to the Kubernetes resource specifications.
+  
+- Generate YAML and send to kube cluster:
+
+ +) If the validation is successful, Helm sends the generated YAML manifests to the Kubernetes cluster.
+ 
+ +) The Kubernetes API server processes the manifests and creates the corresponding resources (e.g., Deployments, Services, ConfigMaps, etc.) in the cluster.
+
+### 4.2. helm --dry-run AND helm template
+
+![image](https://github.com/user-attachments/assets/3a5ab38d-7c98-4a2f-84f6-661105f435f4)
+
 
 ![image](https://github.com/user-attachments/assets/5aa40033-f6e2-4b41-9a83-b88dbe541d10)
 
-
-### 4.3. helm template
-In some cases, user will use all generated template files from --dry-run command above to apply to K8s cluster. But the dry run command include some non yaml syntax or elements into templates that get generated so it will have error. --dry-run can also use with both installation and upgradation, upgrade output will be completely different from installation because only the differences will be generated. Using --dry-run, we need connection to K8s cluster so template yaml files are validated.
-
-helm template mydb bitnami/mysql --values values.yaml
-
-helm template only generated yaml files format for new installation, never communicates with the kubernetes api server, it doesn't validate these templates, so it doesn't need a active Kubernetes cluster to work. This is great for your ci/cd tools where you don't have access to a kubernetes cluster, but you still want to generate these templates and use them later.
 ![image](https://github.com/user-attachments/assets/e341d3fb-12cb-4b23-a419-4ebafa8bee5e)
 
 
-### 4.4. More about Release Records
+### 4.3. More about Release Records
 - values.yaml changed and upgrade the chart:
 
 ![image](https://github.com/user-attachments/assets/5963b791-bf15-4e99-a915-2d451d7146f5)
@@ -203,7 +224,7 @@ helm template only generated yaml files format for new installation, never commu
 ![image](https://github.com/user-attachments/assets/c89958dd-e0fb-48ff-8968-e4a2cd84e9bf)
 
 
-### 4.5. helm get
+### 4.4. helm get
 
 If helm list does not give you enough information, you can use helm get to have more details. It contains sub commands and flags
 
@@ -220,7 +241,7 @@ helm get values mydb --all: will show default values.
 ![image](https://github.com/user-attachments/assets/9e455e87-3bd3-4dad-bd28-28d929d07f5b)
 
 
-### 4.6. helm history
+### 4.5. helm history
 
 helm history mydb
 
@@ -230,7 +251,7 @@ Even when a upgrade or installation fails the version and history for it will be
 ![image](https://github.com/user-attachments/assets/825687ac-7799-4fb2-ade8-dfd8b3659d67)
 
 
-### 4.7. helm rollback
+### 4.6. helm rollback
 
 helm rollback myapache 1
 
@@ -239,13 +260,13 @@ helm rollback myapache 1
 Even if we uninstall helm chart but we still keep helm history, we can still rollback to previous versions. (helm uninstall mydb --keep-history)
 
 
-### 4.8. create namespace
+### 4.7. create namespace
 
 Helm has option or flag called --create-namespace. This will automatically create new namespace, we don't have to crate new namespace then apply to helm command.
 
 - Example: helm install myapache bitnami/apache --namespace myapache --create-namespace
 
-### 4.9. helm install or upgrade
+### 4.8. helm install or upgrade
 
 Example: helm upgrade --install mywebserver bitnamy/apache
 
@@ -254,21 +275,21 @@ The way this command works, it will first check if the installation is already t
 ![image](https://github.com/user-attachments/assets/20f545fe-72be-4773-bff6-887e2b8ad081)
 ![image](https://github.com/user-attachments/assets/4de0fb08-4c50-4664-9d8b-a7f2ed32d51e)
 
-### 4.10. Generate Release Names
+### 4.9. Generate Release Names
 
 helm install bitnami/apache --generate-name
 
 ![image](https://github.com/user-attachments/assets/8eec18c7-5cc1-4d41-a1d3-f8cdd01a4fae)
 ![image](https://github.com/user-attachments/assets/b9ec1391-b39d-4106-b919-6edec7beeb43)
 
-### 4.11. Wait and Timeout
+### 4.10. Wait and Timeout
 The helm install command considers the installation to be successful as soon as the manifest is received by the kubernetes API server it doesn't wait for the pods to be up and running.
 To wait until helm successful install, use --wait option. Default time is 5 minutes, if the installation doesn't complete, if the pods are not up and running within this time the installation will be marked as a failure.
 
        helm install mywebserver2 bitnami/apache --wait --timeout 5m10s
 
 
-### 4.12. Forceful upgrades
+### 4.11. Forceful upgrades
 When using helm upgrade, it will restart those pods whose values have changed, it will not restart all the pods all the time. But if you want to forcefully restart the pods when you do a upgrade, use --force. Helm will delete the current deployment instead of modifying the deployment and it will recreate the deployment (there will be some downtime for the application)
 
        helm upgrade mywebserver2 bitnami/apache --force
