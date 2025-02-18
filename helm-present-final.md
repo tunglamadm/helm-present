@@ -271,7 +271,7 @@ Even if we uninstall helm chart but we still keep helm history, we can still rol
 
 ### 4.7. create namespace
 
-Helm has option or flag called --create-namespace. This will automatically create new namespace, we don't have to crate new namespace then apply to helm command.
+Helm has option or flag called --create-namespace. This will automatically create new namespace, we don't have to create new namespace then apply to helm command.
 
 - Example: helm install myapache bitnami/apache --namespace myapache --create-namespace
 
@@ -292,7 +292,7 @@ helm install bitnami/apache --generate-name
 ![image](https://github.com/user-attachments/assets/b9ec1391-b39d-4106-b919-6edec7beeb43)
 
 ### 4.10. Wait and Timeout
-The helm install command considers the installation to be successful as soon as the manifest is received by the kubernetes API server it doesn't wait for the pods to be up and running.
+The helm install command considers the installation to be successful as soon as the manifest is received by the kubernetes API server, it doesn't wait for the pods to be up and running.
 To wait until helm successful install, use --wait option. Default time is 5 minutes, if the installation doesn't complete, if the pods are not up and running within this time the installation will be marked as a failure.
 
        helm install mywebserver2 bitnami/apache --wait --timeout 5m10s
@@ -316,7 +316,7 @@ By default helm create command uses the nginx chart to create chart.
 - Chart.yaml file contains the metadata about the chart.
 ![image](https://github.com/user-attachments/assets/768c441c-f415-4faa-843d-c23d969302e6)
 
-- charts folder, it will empty when we first create the chart, ut if this chart depends on any other charts those charts will be pulled and stored inside charts folder.
+- charts folder, it will empty when we first create the chart, but if this chart depends on any other charts those charts will be pulled and stored inside charts folder.
   
 - templates folder:
   
@@ -355,7 +355,7 @@ This is the file that has the metadata about project
   
   +) when we use a chart to deploy application type will be application
   
-  +) library will be use in case project will have reusable functions that can be used across charts.   When define a chart as a library project, it will not have any templates and there will be no releases or installations done using that chart. It simply is to define some reusable functions that can be used across other charts, other library charts or other application charts.
+  +) library will be used in case project will have reusable functions that can be used across charts.   When define a chart as a library project, it will not have any templates and there will be no releases or installations done using that chart. It simply is to define some reusable functions that can be used across other charts, other library charts or other application charts.
 
 - version: the version of the chart starts with zero point 0.1.0 (version number is not fixed, can be any numer)
 
