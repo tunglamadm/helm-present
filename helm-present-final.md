@@ -13,7 +13,9 @@ For example to install MongoDB application to the Kubernetes, we need to create 
 Using Helm this can be accomplished with a single command, helm will pull a MongoDB chart from a centralized then install with a single command (This is one of the template charts public in the internet, you can create your own charts).
 
 ### Revision History
+
 Helm maintains a revision history after installations and upgrades.
+
 When upgrades, it will create another revision for it.
 ![image](https://github.com/user-attachments/assets/19b6aef8-059d-4ac9-8e3a-273e9debf1bd)
 
@@ -512,6 +514,7 @@ nindent stands for new line indent indentation (space in YAML format)
 ![image](https://github.com/user-attachments/assets/0b0665db-c2eb-453b-b962-c501a2a54574)
 
 When we get that data from values file, Chart file,... we get it as objects. toYaml will convert the current object into YAML so that it can be pushed into the output as YAML
+
 ![image](https://github.com/user-attachments/assets/63e5e5c6-e398-4e36-8809-874c0bf292d1)
 
 More about fuctions: https://helm.sh/docs/chart_template_guide/function_list/
@@ -519,14 +522,19 @@ More about fuctions: https://helm.sh/docs/chart_template_guide/function_list/
 ### 6.5. Use Conditional Logic
 
 - Set a boolean value in values.yaml
+- 
 ![image](https://github.com/user-attachments/assets/4b99f62c-2c66-4bf6-8dfb-0a8deb09af2a)
 
 - Write a logic inside deployment.yaml
 
 {{- if .Values.my.flag }}             (Start with if and follow the condition, flag now is true)
+
 {{"Output of if" | nindent 2}}        (This is the logic, we can have more than 1 line)
+
 {{- else}}                            (This will run if the flag is false)
+
 {{"Output of else" | nindent 2}}        (Logic of else)
+
 {{- end}}                             (End the logic)
 
 ![image](https://github.com/user-attachments/assets/79260641-9889-4b61-817f-b57655fe7cd2)
