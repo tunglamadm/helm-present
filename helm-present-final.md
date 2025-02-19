@@ -522,7 +522,7 @@ More about fuctions: https://helm.sh/docs/chart_template_guide/function_list/
 ### 6.5. Use Conditional Logic
 
 - Set a boolean value in values.yaml
-- 
+ 
 ![image](https://github.com/user-attachments/assets/4b99f62c-2c66-4bf6-8dfb-0a8deb09af2a)
 
 - Write a logic inside deployment.yaml
@@ -585,10 +585,12 @@ If you want to point dot back to root, put $ before the dot: $.
 
 
 
-Value for variable can be hardcoded or call be pass from values file
+Value for variable can be hardcoded or can be pass from values file
 
 ![image](https://github.com/user-attachments/assets/f23171c5-c7b4-4a8a-9549-6fad92883217)
+
 ![image](https://github.com/user-attachments/assets/9ce0aca5-446a-4b15-8c0a-55e3fc7dbb09)
+
 ![image](https://github.com/user-attachments/assets/56538457-267d-4e30-a8a8-c1a87108c328)
 
 You can assign new values to the same variable, but they have to be the same type. In this example .Values.my.flag return a boolean type, new value should also a type of boolean. If not it will use the first value assigned.
@@ -624,7 +626,9 @@ Because range will go through each element so we can remove toYaml before dot.
 +) My Custom Template: Comment about the custom template
 
 +) {{- define "firstchart.mytemplate" -}} : template name
+
 +) {{- default .Chart.Name .Values.myValue}}:  Logic of the template, you can define any custom logic.
+
    "default .Chart.Name" giá trị mặc định được đưa vào nếu ".Values.myValue" là rỗng.
 
 ![image](https://github.com/user-attachments/assets/47ff671e-fd31-4e1c-b7a8-c83e9d2af894)
